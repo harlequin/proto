@@ -653,7 +653,7 @@ mod loader {
         async fn matches_configured_registry() {
             let (_sandbox, loader) = create_loader_with_registries(vec![RegistryConfig {
                 auth: false,
-                default: false,
+                default: Some(false),
                 registry: FIXTURE_HOST.into(),
                 namespace: Some(FIXTURE_NAMESPACE.into()),
             }]);
@@ -707,7 +707,7 @@ mod loader {
         async fn no_host_iterates_configured_registries() {
             let (_sandbox, loader) = create_loader_with_registries(vec![RegistryConfig {
                 auth: false,
-                default: false,
+                default: Some(false),
                 registry: FIXTURE_HOST.into(),
                 namespace: Some(FIXTURE_NAMESPACE.into()),
             }]);
@@ -781,7 +781,7 @@ mod loader {
         async fn uses_cache_on_second_call() {
             let (_sandbox, loader) = create_loader_with_registries(vec![RegistryConfig {
                 auth: false,
-                default: false,
+                default: Some(false),
                 registry: FIXTURE_HOST.into(),
                 namespace: Some(FIXTURE_NAMESPACE.into()),
             }]);

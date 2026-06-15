@@ -26,7 +26,7 @@ pub struct RegistryConfig {
     /// Whether this registry should be used as the default when
     /// no registry is specified in the locator, or when only an
     /// identifier is provided.
-    pub default: bool,
+    pub default: Option<bool>,
 
     /// The domain/host of the registry.
     pub registry: String,

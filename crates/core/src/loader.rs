@@ -94,7 +94,7 @@ pub fn locate_plugin(
             .settings
             .registries
             .iter()
-            .find(|registry| registry.default)
+            .find(|registry| registry.default.unwrap_or(true))
         && let Ok(maybe_locator) =
             PluginLocator::try_from(format!("registry://{}", registry.get_reference(id)))
     {
