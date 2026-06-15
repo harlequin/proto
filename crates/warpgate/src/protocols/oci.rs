@@ -6,7 +6,7 @@ use oci_client::{Reference, errors::OciDistributionError};
 use starbase_styles::color;
 use std::borrow::Cow;
 use std::sync::Arc;
-use tracing::{trace, warn};
+use tracing::trace;
 use warpgate_api::{Id, RegistryLocator};
 
 #[derive(Clone)]
@@ -174,7 +174,6 @@ impl LoaderProtocol<RegistryLocator> for OciLoader {
 
         // Then try all the configured registries
         for registry in &self.registries {
-            warn!("Try all others");
             if let Some(from) = self.pull_image(id, locator, registry, true).await? {
                 return Ok(from);
             }
