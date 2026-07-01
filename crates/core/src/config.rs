@@ -666,8 +666,22 @@ pub struct ProtoConfigEnvOptions<'ctx> {
 
 pub fn find_debug_locator_with_fallback(name: &str, version: &str) -> PluginLocator {
     static URL_CACHE: OnceLock<bool> = OnceLock::new();
+    static MOON_REGISTRY_HOST_CACHE: OnceLock<String> = OnceLock::new();
+    static MOON_REGISTRY_NAMESPACE_CACHE: OnceLock<String> = OnceLock::new();
 
     let use_urls = *URL_CACHE.get_or_init(|| bool_var("PROTO_PLUGINS_USE_URL_DIST"));
+    let moon_registry_host = MOON_REGISTRY_HOST_CACHE.get_or_init(|| {
+        env::var("MOON_DEFAULT_REGISTRY_HOST")
+            .ok()
+            .filter(|s| !s.is_empty())
+            .unwrap_or_else(|| "ghcr.io".to_string())
+    });
+    let moon_registry_namespace = MOON_REGISTRY_NAMESPACE_CACHE.get_or_init(|| {
+        env::var("MOON_DEFAULT_REGISTRY_NAMESPACE")
+            .ok()
+            .filter(|s| !s.is_empty())
+            .unwrap_or_else(|| "moonrepo".to_string())
+    });
 
     find_debug_locator(name).unwrap_or_else(|| {
         if use_urls {
@@ -678,8 +692,8 @@ pub fn find_debug_locator_with_fallback(name: &str, version: &str) -> PluginLoca
             }))
         } else {
             PluginLocator::Registry(Box::new(RegistryLocator {
-                registry: Some("ghcr.io".into()),
-                namespace: Some("moonrepo".into()),
+                registry: Some(moon_registry_host.into()),
+                namespace: Some(moon_registry_namespace.into()),
                 image: name.into(),
                 tag: Some(version.into()),
             }))
